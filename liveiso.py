@@ -8,7 +8,7 @@ class ShellBuiltins:
     def append(f, *a): file = open(f, "a"); file.write(' '.join(a)); file.close()
     def cat(f): file = open(f, "r"); print(file.read()); file.close()
     def ls(d="."): return os.listdir(d)
-    def cd(d=SCRIPT_PATH): os.chdir(SCRIPT_PATH) if d in ["", "~"] else os.chdir(d) 
+    def cd(d=SCRIPT_PATH): os.chdir(SCRIPT_PATH) if d in ["~"] else os.chdir(d); print(d)
     def inchroot(): print(IN_CHROOT)
     def pwd(): print(os.getcwd())
     def clear(): os.system("clear") if os.name != "nt" else os.system("cls")
@@ -52,7 +52,7 @@ class ISOUtils:
         if c == "install":
             for pkg in a:
                 os.system(f"curl -L https://raw.githubusercontent.com/Typhoonz0/ossim-test/refs/heads/main/{pkg}.py -o {DISKENV}/{pkg}.py")
-                if pkg == "base": subprocess.run([sys.executable, os.path.join(DISKENV, "base.py")], env={**os.environ, "RUNNING_AS_SUBPROCESS": "1"})
+                if pkg == "base": subprocess.run([sys.executable, os.path.join(DISKENV, "inos3.py")], env={**os.environ, "RUNNING_AS_SUBPROCESS": "1"})
         elif c == "uninstall":
             for pkg in a:
                 ISOUtils.rm(os.path.join(DISKENV, f"{pkg}.py"))
@@ -60,8 +60,8 @@ class ISOUtils:
 class LiveEnviroment:
     @staticmethod
     def main():
+        ShellBuiltins.cd(SCRIPT_PATH)
         while True:
-            ShellBuiltins.cd(SCRIPT_PATH)
             try:
                 line = input("[live-env]$ ").split()
                 if not line: continue
