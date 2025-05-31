@@ -12,7 +12,7 @@ files = {
 
 for file_name, hex_content in files.items():
     decoded_content = binascii.a2b_base64(hex_content).decode()
-    with open(os.path.join(root, f"{file_name}.py"), "w") as file:
+    with open(os.path.join(root, "bin", f"{file_name}.py"), "w") as file:
         file.write(decoded_content)
         file.flush()
 
