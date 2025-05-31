@@ -18,7 +18,7 @@ class inOS3:
     def login():
         f = open(os.path.join(SCRIPT_PATH, "etc", "shadow")) 
         storedpw = f.read()
-        pw = input()
+        pw = input("Password: ")
         hashedpw = hashlib.sha256(pw.encode()).hexdigest()
         if storedpw == hashedpw:
             inOS3.main()
@@ -62,4 +62,4 @@ if os.getenv("RUNNING_AS_SUBPROCESS") == "1":
     IN_CHROOT = True
 
 
-inOS3.main()
+inOS3.login()
