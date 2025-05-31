@@ -1,54 +1,19 @@
-# commiting in progress liveenv just to check
+import binascii, os
+root = os.path.dirname(os.path.abspath(__file__))
 
-import os, shutil, sys
+files = {
+    'mkdir': 'aW1wb3J0IG9zLCBzeXM7IG4gPSBzeXMuYXJndlsxXTsgb3MubWFrZWRpcnMobiwgZXhpc3Rfb2s9VHJ1ZSk=',
+    'rmdir': 'aW1wb3J0IG9zLHN5cwpuID0gc3lzLmFyZ3ZbMV0Kb3MucmVtb3ZlZGlycyhuKSAgICAK',
+    'touch': 'aW1wb3J0IHN5cwpuID0gc3lzLmFyZ3ZbMV0KZmlsZSA9IG9wZW4obiwgInciKTsgZmlsZS5jbG9zZSgp',
+    'rmforce': 'aW1wb3J0IHN5cywgc2h1dGlsCm4gPSBzeXMuYXJndlsxXQpzaHV0aWwucm10cmVlKG4p',
+    'rm': 'aW1wb3J0IG9zLCBzeXMKbiA9IHN5cy5hcmd2WzFdCm9zLnJlbW92ZShuKQ==',
+    'chpasswd': 'aW1wb3J0IG9zLCBzeXMsIGhhc2hsaWIKcHcgPSBzeXMuYXJndlsxXQpTQ1JJUFRfUEFUSCA9IG9zLnBhdGguZGlybmFtZShvcy5wYXRoLmRpcm5hbWUob3MucGF0aC5hYnNwYXRoKF9fZmlsZV9fKSkpCmZpbGUgPSBvcGVuKG9zLnBhdGguam9pbihTQ1JJUFRfUEFUSCwgImV0YyIsICJzaGFkb3ciKSwgInciKTsgZmlsZS53cml0ZShoYXNobGliLnNoYTI1Nihwdy5lbmNvZGUoKSkuaGV4ZGlnZXN0KCkpOyBmaWxlLmNsb3NlKCk=='
+}
 
-SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+for file_name, hex_content in files.items():
+    decoded_content = binascii.a2b_base64(hex_content).decode()
+    with open(os.path.join(root, f"{file_name}.py"), "w") as file:
+        file.write(decoded_content)
+        file.flush()
 
-class ShellBuiltins:
-    def mkdir(n): os.makedirs(n, exist_ok=True)
-    def rmdir(n): os.removedirs(n)
-    def touch(f): open(f, "w").close()
-    def rm(f): shutil.rmtree(f)
-    def ls(d="."): return os.listdir(d)
-    def cd(d=SCRIPT_PATH): os.chdir(SCRIPT_PATH) if d in ["", "~"] else os.chdir(d) 
-    def pwd(): print(os.getcwd())
-    def clear(): os.system("clear") if os.name != "nt" else os.system("cls")
-    def exit(): sys.exit()
-
-class ISOUtils:
-    def mkdisk(p): 
-        ShellBuiltins.mkdir(p)
-
-    def ipkg(c, *a):
-        if c == "install":
-            for pkg in a:
-                os.system("git clone") 
-
-class LiveEnviroment:
-    @staticmethod
-    def main():
-        while True:
-            try:
-                line = input("[live-env]$ ").split()
-                if not line: continue
-                cmd, *args = line
-                f = getattr(ShellBuiltins, cmd, None) or getattr(ISOUtils, cmd, None)
-                if not f:
-                    print(f"Command not found: {cmd}")
-                    continue
-
-                def conv(x):
-                    if x.lower() == "true": return True
-                    if x.lower() == "false": return False
-                    if x.isdigit(): return int(x)
-                    return x
-
-                args = [conv(a) for a in args]
-                r = f(*args)
-                if r is not None:
-                    print('\n'.join(r) if isinstance(r, (list, tuple)) else r)
-            except Exception as e:
-                print(f"Error: {e}")
-
-if __name__ == "__main__":
-    LiveEnviroment.main()
+print(f"Files have been written to {root}")
