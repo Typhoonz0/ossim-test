@@ -29,7 +29,7 @@ class ISOUtils:
 
     def rmdisk(p):
         if input(f"Are you sure you want to remove disk {p}? [y/N] ").lower() in ["y", "yes"]:
-            ShellBuiltins.rmforce(p)
+            ISOUtils.rmforce(p)
 
     def chdisk(p):
         global DISKENV
@@ -37,14 +37,14 @@ class ISOUtils:
 
     def mkdisk(p):
         current = os.getcwd()
-        ShellBuiltins.mkdir(p)
+        ISOUtils.mkdir(p)
         ShellBuiltins.cd(p)
-        ShellBuiltins.mkdir("home")
-        ShellBuiltins.mkdir("etc")
-        ShellBuiltins.mkdir("mnt")
-        ShellBuiltins.mkdir("tmp")
-        ShellBuiltins.mkdir("bin")
-        ShellBuiltins.mkdir("boot")
+        ISOUtils.mkdir("home")
+        ISOUtils.mkdir("etc")
+        ISOUtils.mkdir("mnt")
+        ISOUtils.mkdir("tmp")
+        ISOUtils.mkdir("bin")
+        ISOUtils.mkdir("boot")
         ShellBuiltins.cd(current)
         ISOUtils.chdisk(p)
 
@@ -55,7 +55,7 @@ class ISOUtils:
                 if pkg == "base": subprocess.run([sys.executable, os.path.join(DISKENV, "base.py")], env={**os.environ, "RUNNING_AS_SUBPROCESS": "1"})
         elif c == "uninstall":
             for pkg in a:
-                ShellBuiltins.rm(os.path.join(DISKENV, f"{pkg}.py"))
+                ISOUtils.rm(os.path.join(DISKENV, f"{pkg}.py"))
 
 class LiveEnviroment:
     @staticmethod
