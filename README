@@ -1,7 +1,7 @@
 mkdisk os
 ipkg install base inos3
-chroot os
+chdisk os
 chpasswd password
 append etc/hostname ossim
 exit
-exit
+
